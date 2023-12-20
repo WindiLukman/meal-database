@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+import LoginSignup from './components/LoginSignup';
 
 function App() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -23,27 +24,37 @@ function App() {
         <Router>
             <div className="App">
                 <header className="App-header">
+                    <nav>
+                        <Link to="/">Home</Link>
+                        <Link to="/login-signup">Login/Signup</Link>
+                    </nav>
+
                     <input
                         type="text"
                         placeholder="Search..."
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        style={{margin: '10px', padding: '10px'}}
+                        style={{ margin: '10px', padding: '10px' }}
                     />
+
                     <Routes>
-                        <Route path="/" element={
-                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', border: '1px solid black', padding: '10px'}}>
-                                {recipes && recipes.map((recipe, index) => (
-                                    <div key={index}>
-                                        <Link to={`/recipe/${recipe.idMeal}`}>
-                                            <h3 style={{fontSize: '0.8rem'}}>{recipe.strMeal}</h3>
-                                            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{width: '100%', height: 'auto'}} />
-                                        </Link>
-                                    </div>
-                                ))}
-                            </div>
-                        }/>
+                        <Route
+                            path="/"
+                            element={
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', border: '1px solid black', padding: '10px' }}>
+                                    {recipes && recipes.map((recipe, index) => (
+                                        <div key={index}>
+                                            <Link to={`/recipe/${recipe.idMeal}`}>
+                                                <h3 style={{ fontSize: '0.8rem' }}>{recipe.strMeal}</h3>
+                                                <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', height: 'auto' }} />
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </div>
+                            }
+                        />
                         <Route path="/recipe/:id" element={<Recipe />} />
+                        <Route path="/login-signup" element={<LoginSignup />} />
                     </Routes>
                 </header>
             </div>
@@ -66,9 +77,9 @@ function Recipe() {
     }, [id]);
 
     return recipe ? (
-        <div style={{margin: '20px', padding: '20px', border: '1px solid #ddd'}}>
-            <h2 style={{color: '#333'}}>{recipe.strMeal}</h2>
-            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{width: '100%', height: 'auto'}}/>
+        <div style={{ margin: '20px', padding: '20px', border: '1px solid #ddd' }}>
+            <h2 style={{ color: '#333' }}>{recipe.strMeal}</h2>
+            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{ width: '100%', height: 'auto' }} />
             <p>{recipe.strInstructions}</p>
             <h3>Ingredients:</h3>
             <ul>
@@ -84,7 +95,6 @@ function Recipe() {
         </div>
     ) : null;
 }
-
 
 export default App;
 
