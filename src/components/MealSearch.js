@@ -33,6 +33,10 @@ function App() {
         }
     }, [searchTerm]);
 
+    const handleValueClick = (value) => {
+        setSearchTerm(value);
+    };
+
     return (
         <Router>
             <div className="App">
@@ -61,6 +65,22 @@ function App() {
                         })}
                     </div>
 
+                     <div>
+                        {names.map((item, index) => {
+                            const name = Object.keys(item)[0];
+                            const value = Object.values(item)[0];
+
+                            if (name === 'alice') {
+                                return (
+                                    <div key={index}>
+                                        <p onClick={() => handleValueClick(value)}>{name}: {value}</p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
+                        
                     <Routes>
                         <Route path="/" element={
                             <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', border: '1px solid black', padding: '10px'}}>
