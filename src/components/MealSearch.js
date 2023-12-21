@@ -9,7 +9,7 @@ import { onSnapshot, collection } from "firebase/firestore";
 function App() {
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, "history"), (snapshot) => {
+        const unsubscribe = onSnapshot(collection(db, "Jeff"), (snapshot) => {
             setHistory(snapshot.docs.map(doc => doc.data()));
         });
 
@@ -50,7 +50,7 @@ function App() {
                             const name = Object.keys(item)[0];
                             const value = Object.values(item)[0];
 
-                            if (name === 'alice') {
+                            if (name === 'admin123@gmail.com') {
                                 return (
                                     <div key={index}>
                                         <p>{name}: {value}</p>
