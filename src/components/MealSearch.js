@@ -3,7 +3,7 @@ import './style.css';
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
-import db from "././firebase/firebase.js";
+import db from "../firebase/firebase.js";
 import { onSnapshot, collection } from "firebase/firestore";
 
 function App() {
