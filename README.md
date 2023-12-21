@@ -11,7 +11,7 @@ We used Firebase to both store the user information as well as using it as authe
 ### Andrew
   - Initial Code for creating the search
   - Implementing Firestorm integration with individual users
-  - Bugfixing App.js for multiple bugs
+  - Bugfixing MealSearch.js for multiple bugs
 ### Jeffrey
   - Fixer for Firebase Connection & Signup
   - Created New Code for Login & Signup 
