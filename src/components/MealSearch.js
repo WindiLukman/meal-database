@@ -1,39 +1,142 @@
-import React, { useState } from "react";
 import Mealitem from "./MealItem";
 import './style.css';
-const Meal = () => {
-    const[search,setSearch]=useState("");
-    const[Mymeal,setMeal]=useState();
-    const searchMeal=(evt)=>{
-        if(evt.key=="Enter")
-        {
-            fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${search}`).then(res=>res.json()).then(data=> {setMeal(data.meals);setSearch("")})
+import './App.css';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+import db from "./firebase.js";
+import { onSnapshot, collection } from "firebase/firestore";
+
+function App() {
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, "Jeff"), (snapshot) => {
+            setHistory(snapshot.docs.map(doc => doc.data()));
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const [names, setHistory] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [recipes, setRecipes] = useState([]);
+    console.log(names);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    useEffect(() => {
+        if (searchTerm !== '') {
+            fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => setRecipes(data.meals));
         }
-    }
+    }, [searchTerm]);
+
+    const handleValueClick = (value) => {
+        setSearchTerm(value);
+    };
+
     return (
-        <>
-            <div className="main">
-                <div className="heading">
-                    <h1>Search Your Food Recipe</h1>
-                    <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque tempore unde sed ducimus voluptates illum!</h4>
-                </div>
-                <div className="searchBox">
-                    <input type="search" className="search-bar" onChange={(e)=>setSearch(e.target.value)} value={search} onKeyPress={searchMeal}/>
-                </div>
-                <div className="container">
-                    {
+        <Router>
+            <div className="App">
+                <header className="App-header">
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        style={{margin: '10px', padding: '10px'}}
+                    />
 
-                        (Mymeal==null)? <p className="notSearch">Not found</p> :
-                            Mymeal.map((res)=>{
-                                return(
-                                    <Mealitem data={res}/>)}
+                    <div>
+                        {names.map((item, index) => {
+                            const name = Object.keys(item)[0];
+                            const value = Object.values(item)[0];
 
-                            )
+                            if (name === 'admin123@gmail.com') {
+                                return (
+                                    <div key={index}>
+                                        <p>{name}: {value}</p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
 
-                    }
-                </div>
+                     <div>
+                        {names.map((item, index) => {
+                            const name = Object.keys(item)[0];
+                            const value = Object.values(item)[0];
+
+                            if (name === 'alice') {
+                                return (
+                                    <div key={index}>
+                                        <p onClick={() => handleValueClick(value)}>{name}: {value}</p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
+                        
+                    <Routes>
+                        <Route path="/" element={
+                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', border: '1px solid black', padding: '10px'}}>
+                                {recipes && recipes.map((recipe, index) => (
+                                    <div key={index}>
+                                        <Link to={`/recipe/${recipe.idMeal}`}>
+                                            <h3 style={{fontSize: '0.8rem'}}>{recipe.strMeal}</h3>
+                                            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{width: '100%', height: 'auto'}} />
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                        }/>
+                        <Route path="/recipe/:id" element={<Recipe />} />
+                    </Routes>
+                </header>
             </div>
-        </>
-    )
+        </Router>
+    );
 }
-export default Meal;
+
+function Recipe() {
+    const [recipe, setRecipe] = useState(null);
+    const { id } = useParams();
+
+    useEffect(() => {
+        fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.meals) {
+                    setRecipe(data.meals[0]);
+                }
+            });
+    }, [id]);
+
+    return recipe ? (
+        <div style={{margin: '20px', padding: '20px', border: '1px solid #ddd'}}>
+            <h2 style={{color: '#ffd700'}}>{recipe.strMeal}</h2>
+            <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{width: '100%', height: 'auto'}}/>
+            <p>{recipe.strInstructions}</p>
+            <h3>Ingredients:</h3>
+            <ul>
+                {Array.from({ length: 20 }, (_, i) => i + 1).map((i) => {
+                    const ingredient = recipe[`strIngredient${i}`];
+                    const measure = recipe[`strMeasure${i}`];
+                    if (ingredient && measure) {
+                        return <li key={i}>{ingredient} - {measure}</li>;
+                    }
+                    return null;
+                })}
+            </ul>
+        </div>
+    ) : null;
+}
+
+
+export default App;
+
+
