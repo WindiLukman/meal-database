@@ -5,7 +5,7 @@ We used Firebase to both store the user information as well as using it as authe
 ## Features
   - A full login and signup page which uses firebase authentication to store user emails.
   - A homepage with a searchbar to search for meals using the API from themealdb.com
-  - Integration with Firestore in order to save individual user's search history
+  - Integration with LocalStorage to save previous searches.
 
 ## Creators and Contributions
 ### Andrew
