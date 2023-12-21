@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-r
 import db from "./firebase.js";
 import { onSnapshot, collection } from "firebase/firestore";
 
-
 function App() {
 
     useEffect(() => {
@@ -44,13 +43,11 @@ function App() {
                         style={{margin: '10px', padding: '10px'}}
                     />
 
-                    {/*<ul>*/}
-                    {/*    {names.map((doc) => (*/}
-                    {/*        <li key={doc.id}>*/}
-                    {/*            {doc.name}*/}
-                    {/*        </li>*/}
-                    {/*    ))}*/}
-                    {/*</ul>*/}
+                    {names.map((item, index) => (
+                        <div key={index}>
+                            <p>{Object.keys(item)[0]}: {Object.values(item)[0]}</p>
+                        </div>
+                    ))}
 
                     <Routes>
                         <Route path="/" element={
@@ -109,3 +106,5 @@ function Recipe() {
 
 
 export default App;
+
+
