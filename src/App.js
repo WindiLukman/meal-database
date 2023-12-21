@@ -1,11 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+import db from "./firebase.js";
+import { onSnapshot, collection } from "firebase/firestore";
 
 function App() {
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, "history"), (snapshot) => {
+            setHistory(snapshot.docs.map(doc => doc.data()));
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const [names, setHistory] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [recipes, setRecipes] = useState([]);
+    console.log(names);
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -30,6 +42,13 @@ function App() {
                         onChange={handleSearchChange}
                         style={{margin: '10px', padding: '10px'}}
                     />
+
+                    {names.map((item, index) => (
+                        <div key={index}>
+                            <p>{Object.keys(item)[0]}: {Object.values(item)[0]}</p>
+                        </div>
+                    ))}
+
                     <Routes>
                         <Route path="/" element={
                             <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', border: '1px solid black', padding: '10px'}}>
@@ -67,7 +86,7 @@ function Recipe() {
 
     return recipe ? (
         <div style={{margin: '20px', padding: '20px', border: '1px solid #ddd'}}>
-            <h2 style={{color: '#333'}}>{recipe.strMeal}</h2>
+            <h2 style={{color: '#ffd700'}}>{recipe.strMeal}</h2>
             <img src={recipe.strMealThumb} alt={recipe.strMeal} style={{width: '100%', height: 'auto'}}/>
             <p>{recipe.strInstructions}</p>
             <h3>Ingredients:</h3>
