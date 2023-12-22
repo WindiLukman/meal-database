@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 body{
-    background-color: #e9e8e8;
+    background-color: hsla(60, 2%, 36%, 0.624);
 }
 .heading h1{
     color:white;
@@ -122,3 +122,32 @@ body{
     display: block;
     text-align: center;
 }
+
+.searchHistory ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .searchHistory ul li {
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+  
+  .searchHistory button {
+    margin-top: 10px;
+  }
+
+  /* Add this style to your style.css */
+.searchBox button {
+    padding: 10px;
+    background-color: #4c87af;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .searchBox button:hover {
+    background-color: #458ba0;
+  }
+  
